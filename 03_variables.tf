@@ -1,3 +1,6 @@
+########################
+# General
+########################
 variable "location" {
   type    = string
   default = "westeurope"
@@ -13,6 +16,34 @@ variable "common_tags" {
   default = {
     owner         = "patryk",
     project       = "javaapplication",
-    working_since = "07.12.2025"
+    working_since = "15.12.2025"
   }
+}
+
+########################
+# AKS
+########################
+variable "aks_node_count" {
+  type    = number
+  default = 1
+}
+
+variable "aks_vm_size" {
+  type    = string
+  default = "Standard_B2s"
+}
+
+variable "aks_auto_scaling_enabled" {
+  type    = bool
+  default = true
+
+}
+variable "aks_min_count" {
+  type    = number
+  default = 1
+}
+
+variable "aks_max_count" {
+  type    = number
+  default = 2
 }

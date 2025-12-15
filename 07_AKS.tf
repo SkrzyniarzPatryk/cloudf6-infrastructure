@@ -5,12 +5,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix          = "${var.project_name}aksdns99"
 
   default_node_pool {
-    name       = "default"
-    node_count = 1
-    vm_size    = "Standard_B2s"
-    auto_scaling_enabled = true
-    min_count            = 1
-    max_count            = 2
+    name                 = "default"
+    node_count           = var.aks_node_count
+    vm_size              = var.aks_vm_size
+    auto_scaling_enabled = var.aks_auto_scaling_enabled
+    min_count            = var.aks_min_count
+    max_count            = var.aks_max_count
   }
 
   identity {
@@ -25,13 +25,15 @@ resource "azurerm_kubernetes_cluster" "aks" {
   tags = var.common_tags
 }
 
+#########################
+# Outputs
+#########################
 output "client_certificate" {
   value     = azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate
   sensitive = true
 }
 
 output "kube_config" {
-  value = azurerm_kubernetes_cluster.aks.kube_config_raw
-
+  value     = azurerm_kubernetes_cluster.aks.kube_config_raw
   sensitive = true
 }
