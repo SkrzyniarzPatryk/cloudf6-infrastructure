@@ -13,6 +13,8 @@ resource "azuread_application_federated_identity_credential" "afic_image_push" {
   audiences      = ["api://AzureADTokenExchange"]
   issuer         = "https://token.actions.githubusercontent.com"
   subject        = "repo:SkrzyniarzPatryk/cloudf6-payment-app:environment:deployment"
+
+  depends_on = [azuread_application_registration.ar_image_push]
 }
 
 resource "azurerm_role_assignment" "ra_reader" {
