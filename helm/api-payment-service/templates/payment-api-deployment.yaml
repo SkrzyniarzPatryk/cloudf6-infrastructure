@@ -17,6 +17,12 @@ spec:
       - name: {{ .Values.paymentApi.deployment.appLabel }}
         image: {{ include "paymentApi.image" . }}
 
+        envFrom:
+          - configMapRef:
+              name: payment-api-env
+          - secretRef:
+              name: payment-api-db-credentials
+
         {{- if .Values.paymentApi.deployment.resources.enabled }}
         resources:
           requests:
