@@ -20,6 +20,10 @@ spec:
       - name: {{ .Values.paymentWorker.deployment.appLabel }}
         image: {{ include "paymentWorker.image" . }}
 
+        envFrom:
+          - configMapRef:
+              name: payment-worker-env
+
         {{- if .Values.paymentWorker.deployment.resources.enabled }}
         resources:
           requests:
