@@ -7,10 +7,10 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ .Values.paymentWorker.deployment.appLabel }}
-  # {{- if not .Values.autoscaling.enabled }}
+  # {{- if not .Values.paymentWorker.autoscaling.enabled }}
   # replicas: {{ .Values.paymentWorker.deployment.replicas }}
   # {{- end }}
-  replicas: {{ ternary .Values.autoscaling.minReplicas .Values.paymentWorker.deployment.replicas .Values.autoscaling.enabled }}
+  replicas: {{ ternary .Values.paymentWorker.autoscaling.minReplicas .Values.paymentWorker.deployment.replicas .Values.paymentWorker.autoscaling.enabled }}
   template:
     metadata:
       labels:
