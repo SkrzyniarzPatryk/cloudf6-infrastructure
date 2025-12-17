@@ -1,24 +1,3 @@
-resource "azurerm_virtual_network" "vnet" {
-  name                = "kaan-vnet"
-  address_space       = ["10.10.0.0/16"]
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-}
-
-resource "azurerm_subnet" "default_sn" {
-  name                 = "kaan-sn"
-  resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.10.10.0/24"]
-}
-
-resource "azurerm_subnet" "aks_sn" {
-  name                 = "aks-sn"
-  resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.10.20.0/24"]
-}
-
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = "${var.project_name}-aks"
   location            = azurerm_resource_group.rg.location
@@ -68,7 +47,7 @@ resource "azurerm_role_assignment" "acr_pull_assignment" {
 }
 # Role for AGIC to subnet contribute
 resource "azurerm_role_assignment" "agic_subnet_permission" {
-  scope                = azurerm_subnet.default_sn.id
+  scope                = azurerm_subnet.appgw_sn.id
   role_definition_name = "Network Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.ingress_application_gateway[0].ingress_application_gateway_identity[0].object_id
 }

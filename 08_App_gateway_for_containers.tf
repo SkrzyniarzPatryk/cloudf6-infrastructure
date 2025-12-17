@@ -30,7 +30,7 @@ resource "azurerm_application_gateway" "network" {
 
   gateway_ip_configuration {
     name      = "appgw-ip-configuration"
-    subnet_id = azurerm_subnet.default_sn.id
+    subnet_id = azurerm_subnet.appgw_sn.id
   }
 
   frontend_port {
