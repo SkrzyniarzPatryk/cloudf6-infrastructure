@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.paymentWorker.deployment.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.paymentWorker.deployment.appLabel }}
+  # {{- if not .Values.autoscaling.enabled }}
+  # replicas: {{ .Values.paymentWorker.deployment.replicas }}
+  # {{- end }}
+  replicas: {{ ternary .Values.autoscaling.minReplicas .Values.paymentWorker.deployment.replicas .Values.autoscaling.enabled }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.paymentWorker.deployment.appLabel }}
+    spec:
+      containers:
+      - name: {{ .Values.paymentWorker.deployment.appLabel }}
+        image: {{ include "paymentWorker.image" . }}
+
+        {{- if .Values.paymentWorker.deployment.resources.enabled }}
+        resources:
+          requests:
+            memory: {{ .Values.paymentWorker.deployment.resources.requests.memory }}
+            cpu: {{ .Values.paymentWorker.deployment.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.paymentWorker.deployment.resources.limits.memory }}
+            cpu: {{ .Values.paymentWorker.deployment.resources.limits.cpu }}
+        {{- end}}
+
+        {{- if .Values.paymentWorker.deployment.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.paymentWorker.deployment.livenessProbe.path }}
+            port: {{ .Values.paymentWorker.deployment.livenessProbe.port }}
+          initialDelaySeconds: {{ .Values.paymentWorker.deployment.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.paymentWorker.deployment.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.paymentWorker.deployment.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.paymentWorker.deployment.livenessProbe.failureThreshold }}
+          successThreshold: {{ .Values.paymentWorker.deployment.livenessProbe.successThreshold }}
+        {{- end}}
+
+        {{- if .Values.paymentWorker.deployment.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.paymentWorker.deployment.readinessProbe.path }}
+            port: {{ .Values.paymentWorker.deployment.readinessProbe.port }}
+          initialDelaySeconds: {{ .Values.paymentWorker.deployment.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.paymentWorker.deployment.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.paymentWorker.deployment.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.paymentWorker.deployment.readinessProbe.failureThreshold }}
+          successThreshold: {{ .Values.paymentWorker.deployment.readinessProbe.successThreshold }}
+        {{- end}}
+
+        ports:
+          - containerPort: {{ .Values.paymentWorker.deployment.exposePort }}
