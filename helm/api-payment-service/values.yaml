@@ -1,23 +1,69 @@
-autoscaling:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 50
-
-
-
-secret:
-  name: nginx-secret
-  htpasswd: "patryk:$apr1$6plu9nbk$X885CqOClxgyQGXVxX4X7."
-
 # 
 # PaymentApi config
 # 
+paymentApi:
+  env:
+    PAYMENT_WORKER_BASE_URL: "http://localhost:8090"
+
+  db:
+    PAYMENT_DB_URL: cGFzc3dvcmQ=  # jdbc:postgresql://localhost:5433/payments
+    PAYMENT_DB_PASSWORD: cGFzc3dvcmQ=
+    PAYMENT_DB_USER: cGFzc3dvcmQ=
+
+  deployment:
+    name: payment-api-deployment
+    appLabel: payment-api
+    replicas: 1
+    exposePort: 8080
+    image:
+      repository: javaservicescontainerregistry123.azurecr.io/javaapps/payment-api
+      tag: 1.0.0
+    resources:
+      enabled: true # Do you want limit resource?
+      requests:
+        memory: "600Mi"
+        cpu: "300m"
+      limits:
+        memory: "800Mi"
+        cpu: "500m"
+    livenessProbe:
+      enabled: true
+      path: /actuator/health
+      port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 30
+      timeoutSeconds: 2
+      failureThreshold: 3
+      successThreshold: 1
+    readinessProbe:
+      enabled: true
+      path: /actuator/health
+      port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 30
+      timeoutSeconds: 2
+      failureThreshold: 3
+      successThreshold: 1
+
+  service:
+    type: ClusterIP # LoadBalancer # changed to cluster for AGIC ingress
+    port: 80
+
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 50
 
 # 
 # PaymentWorker config
 # 
 paymentWorker:
+  env:
+    PAYMENT_WORKER_PORT: 8090 # remember that image must expose that port
+    PAYMENT_API_BASE_URL: "http://localhost:8080"
+    WORKER_CPU_LOAD_MS: 500
+
   deployment:
     name: payment-worker-deployment
     appLabel: payment-worker
@@ -57,8 +103,8 @@ paymentWorker:
     type: ClusterIP # LoadBalancer # changed to cluster for AGIC ingress
     port: 80
 
-
-
-
-
-
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 50
