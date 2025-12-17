@@ -4,11 +4,7 @@ autoscaling:
   maxReplicas: 3
   targetCPUUtilizationPercentage: 50
 
-service:
-  name: nginx-service
-  type: LoadBalancer #ClusterIP # LoadBalancer # changed to cluster for nginx ingress
-  port: 80
-  targetPort: 8090
+
 
 secret:
   name: nginx-secret
@@ -56,6 +52,10 @@ paymentWorker:
       timeoutSeconds: 2
       failureThreshold: 3
       successThreshold: 1
+
+  service:
+    type: ClusterIP # LoadBalancer # changed to cluster for AGIC ingress
+    port: 80
 
 
 
