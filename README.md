@@ -5,7 +5,7 @@ terraform init
 terraform apply  
 
 ### Login to kubectl
-terraform output -raw kube_config >~/.kube/config  
+terraform output -raw kube_config > ~/.kube/config  
 
 ### Helm commands
 helm install java -n javaapp
@@ -13,6 +13,9 @@ helm uninstall java -n javaapp
 
 ### kubectl commands
 kubectl rollout restart deployment/
+
+### Ingress
+C:\Windows\System32\drivers\etc\hosts <- hosts
 
 
 ## Others
