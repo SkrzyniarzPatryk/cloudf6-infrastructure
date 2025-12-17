@@ -9,4 +9,4 @@ spec:
   - port: {{ .Values.paymentWorker.service.port }}
     targetPort: {{ .Values.paymentWorker.deployment.exposePort }}
   selector:
-    app: {{ .Values.paymentWorker.deployment.appLabel }}
+    app.kubernetes.io/name: {{ .Values.paymentWorker.deployment.appLabel }}

@@ -6,7 +6,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.paymentWorker.deployment.appLabel }}
+      app.kubernetes.io/name: {{ .Values.paymentWorker.deployment.appLabel }}
   # {{- if not .Values.autoscaling.enabled }}
   # replicas: {{ .Values.paymentWorker.deployment.replicas }}
   # {{- end }}
@@ -14,7 +14,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Values.paymentWorker.deployment.appLabel }}
+        app.kubernetes.io/name: {{ .Values.paymentWorker.deployment.appLabel }}
     spec:
       containers:
       - name: {{ .Values.paymentWorker.deployment.appLabel }}
