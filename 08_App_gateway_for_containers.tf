@@ -70,4 +70,22 @@ resource "azurerm_application_gateway" "network" {
     backend_address_pool_name  = local.backend_address_pool_name
     backend_http_settings_name = local.http_setting_name
   }
+
+  lifecycle {
+    ignore_changes = [
+      backend_address_pool,
+      backend_http_settings,
+      http_listener,
+      request_routing_rule,
+      probe,
+      url_path_map
+    ]
+  }
+}
+
+#####################
+# Outputs
+#####################
+output "Application_Gateway_Frontend_IP_Adress" {
+  value = azurerm_public_ip.appgw_public_ip.ip_address
 }
