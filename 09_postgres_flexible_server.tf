@@ -1,5 +1,5 @@
 resource "azurerm_private_dns_zone" "private_dns" {
-  name                = "europe.postgres.database.azure.com"
+  name                = "javaserviceapppsqlflexserver.private.postgres.database.azure.com"
   resource_group_name = azurerm_resource_group.rg.name
 }
 
@@ -21,11 +21,23 @@ resource "azurerm_postgresql_flexible_server" "psql_server" {
   public_network_access_enabled = false
   administrator_login           = "psqladmin"
   administrator_password        = "H@Sh1CoR3!" 
-  # zone                          = "1"
+  zone                          = "3"
 
-  storage_mb   = 32768
+  storage_mb   = 32768 
   storage_tier = "P4"
 
   sku_name   = "B_Standard_B1ms"
   depends_on = [azurerm_private_dns_zone_virtual_network_link.private_dns_link]
+}
+
+resource "azurerm_postgresql_flexible_server_database" "psql_server" {
+  name      = "payments"
+  server_id = azurerm_postgresql_flexible_server.psql_server.id
+  collation = "en_US.utf8"
+  charset   = "UTF8"
+
+  # prevent the possibility of accidental data loss
+  lifecycle {
+    prevent_destroy = true
+  }
 }
