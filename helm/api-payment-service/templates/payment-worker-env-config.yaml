@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: payment-worker-env
 data:
-  PAYMENT_WORKER_PORT: {{ .Values.paymentWorker.env.PAYMENT_WORKER_PORT }}
+  PAYMENT_WORKER_PORT: {{ .Values.paymentWorker.env.PAYMENT_WORKER_PORT | quote }}
   PAYMENT_API_BASE_URL: {{ .Values.paymentWorker.env.PAYMENT_API_BASE_URL }}
-  WORKER_CPU_LOAD_MS: {{ .Values.paymentWorker.env.WORKER_CPU_LOAD_MS }}
+  WORKER_CPU_LOAD_MS: {{ .Values.paymentWorker.env.WORKER_CPU_LOAD_MS | quote  }}
