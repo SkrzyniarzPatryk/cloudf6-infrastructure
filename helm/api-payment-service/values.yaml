@@ -3,12 +3,12 @@
 # 
 paymentApi:
   env:
-    PAYMENT_WORKER_BASE_URL: "http://localhost:8090"
+    PAYMENT_WORKER_BASE_URL: "http://payment-worker-service" # service name
 
   db:
-    PAYMENT_DB_URL: cGFzc3dvcmQ=  # jdbc:postgresql://localhost:5433/payments
-    PAYMENT_DB_PASSWORD: cGFzc3dvcmQ=
-    PAYMENT_DB_USER: cGFzc3dvcmQ=
+    PAYMENT_DB_URL: amRiYzpwb3N0Z3Jlc3FsOi8vamF2YXNlcnZpY2VhcHBwc3FsZmxleHNlcnZlci5wb3N0Z3Jlcy5kYXRhYmFzZS5henVyZS5jb206NTQzMi9wYXltZW50cw==  # example jdbc:postgresql://localhost:5432/payments
+    PAYMENT_DB_PASSWORD: SEBTaDFDb1IzIQ==
+    PAYMENT_DB_USER: cHNxbGFkbWlu
 
   deployment:
     name: payment-api-deployment
@@ -17,20 +17,20 @@ paymentApi:
     exposePort: 8080
     image:
       repository: javaservicescontainerregistry123.azurecr.io/javaapps/payment-api
-      tag: 1.0.0
+      tag: 1.0.1
     resources:
       enabled: true # Do you want limit resource?
       requests:
-        memory: "600Mi"
-        cpu: "300m"
+        memory: "400Mi"
+        cpu: "200m"
       limits:
-        memory: "800Mi"
-        cpu: "500m"
+        memory: "700Mi"
+        cpu: "400m"
     livenessProbe:
       enabled: true
       path: /actuator/health
       port: 8080
-      initialDelaySeconds: 5
+      initialDelaySeconds: 30
       periodSeconds: 30
       timeoutSeconds: 2
       failureThreshold: 3
@@ -39,7 +39,7 @@ paymentApi:
       enabled: true
       path: /actuator/health
       port: 8080
-      initialDelaySeconds: 5
+      initialDelaySeconds: 30
       periodSeconds: 30
       timeoutSeconds: 2
       failureThreshold: 3
@@ -61,7 +61,7 @@ paymentApi:
 paymentWorker:
   env:
     PAYMENT_WORKER_PORT: 8090 # remember that image must expose that port
-    PAYMENT_API_BASE_URL: "http://localhost:8080"
+    PAYMENT_API_BASE_URL: "http://payment-api-service" # service name
     WORKER_CPU_LOAD_MS: 500
 
   deployment:
@@ -75,16 +75,16 @@ paymentWorker:
     resources:
       enabled: true # Do you want limit resource?
       requests:
-        memory: "600Mi"
-        cpu: "300m"
+        memory: "400Mi"
+        cpu: "200m"
       limits:
-        memory: "800Mi"
-        cpu: "500m"
+        memory: "600Mi"
+        cpu: "400m"
     livenessProbe:
       enabled: true
       path: /actuator/health
       port: 8090
-      initialDelaySeconds: 5
+      initialDelaySeconds: 30
       periodSeconds: 30
       timeoutSeconds: 2
       failureThreshold: 3
@@ -93,7 +93,7 @@ paymentWorker:
       enabled: true
       path: /actuator/health
       port: 8090
-      initialDelaySeconds: 5
+      initialDelaySeconds: 30
       periodSeconds: 30
       timeoutSeconds: 2
       failureThreshold: 3
