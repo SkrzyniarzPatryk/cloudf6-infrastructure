@@ -9,9 +9,9 @@ fi
 
 # targets
 targets=(
-  "-target=azurerm_container_registry.acr"
-  "-target=azurerm_role_assignment.ra_reader"
-  "-target=azurerm_resource_group.rg"
+  # "-target=azurerm_container_registry.acr"
+  # "-target=azurerm_role_assignment.ra_reader"
+  # "-target=azurerm_resource_group.rg"
   "-target=azurerm_virtual_network.vnet"
   "-target=azurerm_subnet.db_sn"
   "-target=azurerm_private_dns_zone.private_dns"
