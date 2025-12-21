@@ -1,5 +1,5 @@
 ################################################
-# Default Helm values with Azure Application Gateway Ingress for API Payment Service
+# Helm values with NGINX Ingress for API Payment Service
 ################################################
 
 #
@@ -9,7 +9,7 @@ ingress:
   enabled: true
   # set to "azure-application-gateway" to enable AGIC specific annotations
   # set "nginx" for nginx ingress controller
-  className: "azure-application-gateway"
+  className: "nginx"
 
   # custom hosts configuration
   hosts:

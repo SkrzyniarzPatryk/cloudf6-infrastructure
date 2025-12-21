@@ -1,25 +1,12 @@
 ################################################
-# Default Helm values with Azure Application Gateway Ingress for API Payment Service
+# Helm values without ingress, hovever with payment-api service of type LoadBalancer
 ################################################
 
 #
 # Ingress config
 #
 ingress:
-  enabled: true
-  # set to "azure-application-gateway" to enable AGIC specific annotations
-  # set "nginx" for nginx ingress controller
-  className: "azure-application-gateway"
-
-  # custom hosts configuration
-  hosts:
-    - host: dev-api.paymentapp.local
-      paths:
-        - path: /
-          pathType: Prefix
-          serviceName: payment-api-service
-          servicePort: 80 # service port defined in .Values.paymentApi.service.port
-  annotations: {}
+  enabled: false
 
 # 
 # PaymentApi config
@@ -69,7 +56,7 @@ paymentApi:
       successThreshold: 1
 
   service:
-    type: ClusterIP # LoadBalancer # changed to cluster for AGIC ingress
+    type: LoadBalancer # changed to cluster for AGIC ingress
     port: 80
 
   autoscaling:
