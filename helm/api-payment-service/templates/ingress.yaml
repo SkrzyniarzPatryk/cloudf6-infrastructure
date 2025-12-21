@@ -35,14 +35,18 @@ spec:
   ingressClassName: {{ .Values.ingress.className }}
 
   rules:
-    - host: dev-api.paymentapp.local
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
       http:
         paths:
-          - path: /
-            pathType: Prefix
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
             backend:
               service:
-                name: payment-api-service
+                name: {{ .serviceName }}
                 port:
-                  number: {{ .Values.paymentApi.service.port }}
-{{- end -}}
+                  number: {{ .servicePort }}
+          {{- end }}
+    {{- end }}
+{{- end }}

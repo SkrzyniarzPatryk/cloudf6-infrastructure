@@ -6,6 +6,15 @@ ingress:
   # set to "azure-application-gateway" to enable AGIC specific annotations
   # set "nginx" for nginx ingress controller
   className: "azure-application-gateway"
+
+  # custom hosts configuration
+  hosts:
+    - host: dev-api.paymentapp.local
+      paths:
+        - path: /
+          pathType: Prefix
+          serviceName: payment-api-service
+          servicePort: 80 # service port defined in .Values.paymentApi.service.port
   annotations: {}
 
 # 
