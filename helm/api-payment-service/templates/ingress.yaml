@@ -23,10 +23,17 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
     {{- end }}
+
+    # ---------------------------------------------------------
+    # User annotations
+    # ---------------------------------------------------------
+    {{- with .Values.ingress.annotations }}
+    {{ toYaml . | indent 4 }}
+    {{- end }}
 spec:
   # Set controller to ingress
   ingressClassName: {{ .Values.ingress.className }}
-  
+
   rules:
     - host: dev-api.paymentapp.local
       http:

@@ -6,6 +6,7 @@ ingress:
   # set to "azure-application-gateway" to enable AGIC specific annotations
   # set "nginx" for nginx ingress controller
   className: "azure-application-gateway"
+  annotations: {}
 
 # 
 # PaymentApi config
