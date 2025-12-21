@@ -1,3 +1,9 @@
+#
+# Ingress config
+#
+ingress:
+  enabled: true
+
 # 
 # PaymentApi config
 # 

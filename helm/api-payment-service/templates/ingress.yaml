@@ -1,11 +1,13 @@
+{{- if .Values.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: app-ingress
   namespace: {{ .Release.Namespace }}
   annotations: 
-    kubernetes.io/ingress.class: azure/application-gateway
     appgw.ingress.kubernetes.io/health-monitor-path: "/"
+    appgw.ingress.kubernetes.io/use-private-ip: "false"
+    appgw.ingress.kubernetes.io/request-timeout: "60"
 spec:
   rules:
     - host: dev-api.paymentapp.local
@@ -18,3 +20,4 @@ spec:
                 name: payment-api-service
                 port:
                   number: {{ .Values.paymentApi.service.port }}
+{{- end -}}
