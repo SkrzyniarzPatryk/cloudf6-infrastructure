@@ -7,17 +7,6 @@ resource "azurerm_public_ip" "appgw_public_ip" {
   sku                 = "Standard"
 }
 
-locals {
-  prefix                         = "appgw"
-  backend_address_pool_name      = "${local.prefix}-beap"
-  frontend_port_name             = "${local.prefix}-feport"
-  frontend_ip_configuration_name = "${local.prefix}-feip"
-  http_setting_name              = "${local.prefix}-be-htst"
-  listener_name                  = "${local.prefix}-httplstn"
-  request_routing_rule_name      = "${local.prefix}-rqrt"
-  redirect_configuration_name    = "${local.prefix}-rdrcfg"
-}
-
 resource "azurerm_application_gateway" "network" {
   count               = var.agic_enabled ? 1 : 0 # only if AGIC is enabled
   name                = "${var.project_prefix}-appgateway"
