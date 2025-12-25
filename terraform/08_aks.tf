@@ -21,3 +21,21 @@ module "aks_and_appgw" {
   aks_max_count                   = var.aks_max_count
   aks_temporary_name_for_rotation = var.aks_temporary_name_for_rotation
 }
+
+#########################
+# Outputs
+#########################
+output "client_certificate" {
+  value     = module.aks_and_appgw.client_certificate
+  sensitive = true
+}
+
+output "kube_config" {
+  value     = module.aks_and_appgw.kube_config
+  sensitive = true
+}
+
+# Only if AGIC is enabled
+output "Application_Gateway_Frontend_IP_Adress" {
+  value = module.aks_and_appgw.Application_Gateway_Frontend_IP_Adress
+}
