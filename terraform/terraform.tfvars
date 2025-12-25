@@ -7,10 +7,10 @@ common_tags = {
   Project     = "JavaServices"
 }
 
-agic_enabled = true
+agic_enabled = false
 
 aks_node_count                  = 1
-aks_vm_size                     = "Standard_B2s"
+aks_vm_size                     = "B2als_v2"
 aks_auto_scaling_enabled        = true
 aks_min_count                   = 1
 aks_max_count                   = 2
