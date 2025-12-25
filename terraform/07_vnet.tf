@@ -39,3 +39,10 @@ resource "azurerm_subnet" "db_sn" {
     }
   }
 }
+
+##############################
+# Outputs
+##############################
+output "db_subnet_cidr" {
+  value = azurerm_subnet.db_sn.address_prefixes[0]
+}

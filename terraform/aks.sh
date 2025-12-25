@@ -14,10 +14,7 @@ targets=(
   "-target=azurerm_subnet.appgw_sn"
   "-target=azurerm_subnet.aks_sn"
   "-target=azurerm_subnet.db_sn"
-  "-target=azurerm_postgresql_flexible_server.psql_server"
-  "-target=azurerm_postgresql_flexible_server_database.psql_server"
-  "-target=azurerm_private_dns_zone.private_dns"
-  "-target=azurerm_private_dns_zone_virtual_network_link.private_dns_link"
+  "-target=module.postgres_flexible_server"
 )
 
 # apply / destroy command

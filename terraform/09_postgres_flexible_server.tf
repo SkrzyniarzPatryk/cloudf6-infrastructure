@@ -19,5 +19,12 @@ module "postgres_flexible_server" {
   vnet_id       = azurerm_virtual_network.vnet.id
 
   # List of databases to create
-  databases_list = ["payments", "orders", "customers"]
+  databases_list = ["payments"]
+}
+
+##################################
+# Outputs
+##################################
+output "postgres_flexible_server_fqdn" {
+  value = module.postgres_flexible_server.fqdn
 }
