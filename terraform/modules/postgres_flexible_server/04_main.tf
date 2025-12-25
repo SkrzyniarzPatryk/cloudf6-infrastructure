@@ -1,7 +1,7 @@
 resource "azurerm_private_dns_zone" "private_dns" {
   name                = "${var.db_name}.private.postgres.database.azure.com"
   resource_group_name = var.resource_group_name
-  tags = var.tags
+  tags                = var.tags
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_link" {
