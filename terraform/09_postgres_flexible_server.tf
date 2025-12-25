@@ -20,10 +20,10 @@ resource "azurerm_postgresql_flexible_server" "psql_server" {
   private_dns_zone_id           = azurerm_private_dns_zone.private_dns.id
   public_network_access_enabled = false
   administrator_login           = "psqladmin"
-  administrator_password        = "H@Sh1CoR3!" 
+  administrator_password        = "H@Sh1CoR3!"
   zone                          = "3"
 
-  storage_mb   = 32768 
+  storage_mb   = 32768
   storage_tier = "P4"
 
   sku_name   = "B_Standard_B1ms"

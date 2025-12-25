@@ -1,7 +1,8 @@
 resource "azurerm_public_ip" "appgw_public_ip" {
-  name                = "${var.project_name}-appgw-public-ip"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  count               = var.agic_enabled ? 1 : 0 # only if AGIC is enabled
+  name                = "${var.project_prefix}-appgw-public-ip"
+  location            = var.location
+  resource_group_name = var.resource_group_name
   allocation_method   = "Static"
   sku                 = "Standard"
 }
@@ -18,9 +19,10 @@ locals {
 }
 
 resource "azurerm_application_gateway" "network" {
-  name                = "${var.project_name}-appgateway"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  count               = var.agic_enabled ? 1 : 0 # only if AGIC is enabled
+  name                = "${var.project_prefix}-appgateway"
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
   sku {
     name     = "Standard_v2"
@@ -30,7 +32,7 @@ resource "azurerm_application_gateway" "network" {
 
   gateway_ip_configuration {
     name      = "appgw-ip-configuration"
-    subnet_id = azurerm_subnet.appgw_sn.id
+    subnet_id = var.appgw_subnet_id
   }
 
   frontend_port {
@@ -40,7 +42,7 @@ resource "azurerm_application_gateway" "network" {
 
   frontend_ip_configuration {
     name                 = local.frontend_ip_configuration_name
-    public_ip_address_id = azurerm_public_ip.appgw_public_ip.id
+    public_ip_address_id = azurerm_public_ip.appgw_public_ip[0].id
   }
 
   backend_address_pool {
@@ -71,6 +73,8 @@ resource "azurerm_application_gateway" "network" {
     backend_http_settings_name = local.http_setting_name
   }
 
+  tags = var.tags
+
   lifecycle {
     ignore_changes = [
       backend_address_pool,
@@ -87,5 +91,7 @@ resource "azurerm_application_gateway" "network" {
 # Outputs
 #####################
 output "Application_Gateway_Frontend_IP_Adress" {
-  value = azurerm_public_ip.appgw_public_ip.ip_address
+  value = length(azurerm_public_ip.appgw_public_ip) > 0 ? (
+    azurerm_public_ip.appgw_public_ip[0].ip_address
+  ) : null
 }

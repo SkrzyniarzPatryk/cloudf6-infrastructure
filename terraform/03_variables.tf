@@ -21,6 +21,14 @@ variable "common_tags" {
 }
 
 ########################
+# Agic settings
+########################
+variable "agic_enabled" {
+  type    = bool
+  default = true
+}
+
+########################
 # AKS
 ########################
 variable "aks_node_count" {
@@ -46,4 +54,9 @@ variable "aks_min_count" {
 variable "aks_max_count" {
   type    = number
   default = 2
+}
+
+variable "aks_temporary_name_for_rotation" {
+  type    = string
+  default = "akstemporar"
 }

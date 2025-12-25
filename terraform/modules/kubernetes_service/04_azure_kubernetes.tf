@@ -1,8 +1,8 @@
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "${var.project_name}-aks"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "${var.project_name}aksdns99"
+  name                = "${var.project_prefix}-aks"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  dns_prefix          = "${var.project_prefix}aksdns99" #
 
   default_node_pool {
     name                        = "default"
@@ -11,16 +11,20 @@ resource "azurerm_kubernetes_cluster" "aks" {
     auto_scaling_enabled        = var.aks_auto_scaling_enabled
     min_count                   = var.aks_min_count
     max_count                   = var.aks_max_count
-    vnet_subnet_id              = azurerm_subnet.aks_sn.id
-    temporary_name_for_rotation = "akstemporar"
+    vnet_subnet_id              = var.aks_node_subnet_id
+    temporary_name_for_rotation = var.aks_temporary_name_for_rotation
   }
 
   identity {
     type = "SystemAssigned"
   }
 
-  ingress_application_gateway {
-    gateway_id = azurerm_application_gateway.network.id
+  # dynamic block for AGIC
+  dynamic "ingress_application_gateway" {
+    for_each = var.agic_enabled ? [1] : []
+    content {
+      gateway_id = azurerm_application_gateway.network[0].id
+    }
   }
 
   network_profile {
@@ -28,7 +32,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_policy = "azure"
   }
 
-  tags = var.common_tags
+  tags = var.tags
 
   lifecycle {
     ignore_changes = [
@@ -36,24 +40,28 @@ resource "azurerm_kubernetes_cluster" "aks" {
     ]
   }
 }
+
 #########################
 # Role assignment for AKS
 #########################
 # ACR role assigned to AKS
 resource "azurerm_role_assignment" "acr_pull_assignment" {
-  scope                = azurerm_container_registry.acr.id
+  count                = length(var.acr_id) > 0 ? 1 : 0 # only if ACR ID is provided
+  scope                = var.acr_id
   role_definition_name = "AcrPull"
   principal_id         = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
 }
 # Role for AGIC to subnet contribute
 resource "azurerm_role_assignment" "agic_subnet_permission" {
-  scope                = azurerm_subnet.appgw_sn.id
+  count                = var.agic_enabled ? 1 : 0 # only if AGIC is enabled
+  scope                = var.appgw_subnet_id
   role_definition_name = "Network Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.ingress_application_gateway[0].ingress_application_gateway_identity[0].object_id
 }
 # Rolle for managing App Gateway by ingress AGIC
 resource "azurerm_role_assignment" "agic_appgw_contributor" {
-  scope                = azurerm_application_gateway.network.id
+  count                = var.agic_enabled ? 1 : 0 # only if AGIC is enabled
+  scope                = azurerm_application_gateway.network[0].id
   role_definition_name = "Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.ingress_application_gateway[0].ingress_application_gateway_identity[0].object_id
 }
