@@ -13,7 +13,7 @@ cd /backend_bootstrap
 terraform init  
 terraform apply  
 
-### Login to kubectl
+### Login to kubectl using terraform state
 terraform output -raw kube_config > ~/.kube/config  
 
 ### Helm commands
