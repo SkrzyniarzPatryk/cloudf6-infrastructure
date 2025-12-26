@@ -21,6 +21,12 @@ ingress:
           servicePort: 80 # service port defined in .Values.paymentApi.service.port
   annotations: {}
 
+#
+# Global NetworkPolicy config
+#
+networkPolicy:
+    enabled: true
+
 # 
 # PaymentApi config
 # 
@@ -78,6 +84,12 @@ paymentApi:
     maxReplicas: 3
     targetCPUUtilizationPercentage: 50
 
+  networkPolicy:
+    enabled: true
+    postgresDbSubnetCidr: "10.10.30.0/24"
+    postgresPort: 5432
+
+
 # 
 # PaymentWorker config
 # 
@@ -131,3 +143,6 @@ paymentWorker:
     minReplicas: 1
     maxReplicas: 3
     targetCPUUtilizationPercentage: 50
+
+  networkPolicy:
+    enabled: true

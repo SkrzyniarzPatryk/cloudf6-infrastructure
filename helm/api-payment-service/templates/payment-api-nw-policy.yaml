@@ -1,0 +1,40 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: payment-api-nw-policy
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.paymentApi.deployment.appLabel }}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+      - ipBlock:
+          cidr: {{ .Values.paymentApi.networkPolicy.postgresDbSubnetCidr }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.paymentApi.networkPolicy.postgresPort }}
+    - to:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: {{ .Values.paymentWorker.deployment.appLabel }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.paymentWorker.deployment.exposePort }}
+    # It is necessary to allow DNS resolution
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+{{- end }}
