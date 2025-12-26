@@ -10,9 +10,10 @@ spec:
       app.kubernetes.io/name: {{ .Values.paymentApi.deployment.appLabel }}
   policyTypes:
     - Egress
-    {{- if eq .Values.ingress.className "nginx" }} # ingress implement only for nginx controller
+     
     - Ingress
   ingress:
+    {{- if eq .Values.ingress.className "nginx" }} # ingress implement only for nginx controller, maybe when using AGIC we will need different setup <- TODO
     - from:
       - namespaceSelector:
           matchLabels:
@@ -24,6 +25,13 @@ spec:
         - protocol: TCP
           port: {{ .Values.paymentApi.deployment.exposePort }}
     {{- end }}
+    - from:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: {{ .Values.paymentWorker.deployment.appLabel }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.paymentApi.deployment.exposePort }}
   egress:
     - to:
       - ipBlock:
