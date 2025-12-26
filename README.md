@@ -24,9 +24,12 @@ helm uninstall java -n javaapp
 kubectl rollout restart deployment/
 
 ### Make debug pod and connect
+#### ubuntu
 kubectl run debug-sql --rm -it --image=ubuntu -- bash  
 apt-get install -y postgresql-client telnet  
 psql -h <IP_BAZY> -U <USER> -d <DB_NAME> -W
+#### curl
+kubectl run test-pod --rm -ti --image=curlimages/curl -- /bin/sh  
 
 ### Ingress
 C:\Windows\System32\drivers\etc\hosts <- hosts
