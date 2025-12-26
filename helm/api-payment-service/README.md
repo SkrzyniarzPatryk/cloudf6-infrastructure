@@ -18,6 +18,8 @@ helm upgrade --install ingress-nginx ingress-nginx \
   --set controller.service.externalTrafficPolicy=Local \
   --namespace ingress-nginx --create-namespace
 ```
+Check Load Balancer Adress:  
+`kubectl get services -n ingress-nginx`
 
 ### Network policy
 Check your postgress CIDR and fill value:
