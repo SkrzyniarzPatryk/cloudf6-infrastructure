@@ -3,11 +3,16 @@
 ### Ingress
 1. Defautl option is **Azure Application gateway for containers**, so Azure directly route traffic to correct service.  
 **AGIC** offer very profesionall features to enterprise application, like WAF and a lot of other traffic controller.  
-**The main downside** of this solution is high cost of AG.
+**The main downside** of this solution is high cost of AG.  
+**Example: `helm install app ./api-payment-service/`**
 2. In other hand we can use `values-nginx-ingress.yaml` to use nginx controller and basic Azure LoadBalancer.  
 Probably it cost less and offer good routing controll to our service.  
-Example: `helm install app ./api-payment-service/ -f ./profiles/values-nginx-ingress.yaml`
+**Example: `helm install app ./api-payment-service/ -f ./profiles/values-nginx-ingress.yaml`**
 3. Last option is `values-basic-load-balancer.yaml`, it don't use any ingress but using **service type LoadBalancer** so Azure will create public Load Balancer.
+
+#### If chosen AGIC ingress
+You must deploy infrastructure with Application Gateway.  
+AG automatically install AGIC controller on K8s.
 
 #### If chosen nginx ingress
 Install nginx ingress
@@ -21,7 +26,10 @@ helm upgrade --install ingress-nginx ingress-nginx \
 Check Load Balancer Adress:  
 `kubectl get services -n ingress-nginx`
 
-### Network policy
+## Network policy
+### Info
+This helm implement network policy, and this work well with Azure network policy. Other option is Calico, howerver it require additional tests.
+### Set CIDR of PostgresSQL (they are in the same VNET)
 Check your postgress CIDR and fill value:
 ```yaml
 paymentApi:
